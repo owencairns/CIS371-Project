@@ -5,6 +5,8 @@ import { ref, Ref } from 'vue';
 
 <template>
   <div class="hero">
+    <h1 class="title">REEL TALK</h1>
+    <h2 class="slogan">Lights, Camera, Opinion</h2>
     <video autoplay loop muted playsinline class="back-vid">
       <source src="../assets/film_projector.mp4" type="video/webm"/>
     </video>
@@ -22,7 +24,7 @@ import { ref, Ref } from 'vue';
     <div class="vid6"></div>
   </div>
   <section class="video-section">
-    <h2>Video Examples</h2>
+    <h1>Trending Now</h1>
     <div class="video-grid">
       <div class="video-placeholder"></div>
       <div class="video-placeholder"></div>
@@ -50,8 +52,25 @@ body {
   position: relative;
   padding: 0 5%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.title {
+  text-transform: uppercase;
+  font-size: 8rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.slogan {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ffe600;
+  margin-top: 0;
+  margin-bottom: 30px;
 }
 
 .content .book {
@@ -83,7 +102,7 @@ body {
 }
 
 .video-section {
-  color: #1d3051;
+  color: #000000;
   margin: 0 auto;
   padding-left: 5%;
   padding-right: 5%;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
-import { getAuth, signInWithEmailAndPassword, UserCredential } from 'firebase/auth'
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -10,70 +10,132 @@ const password = ref('')
 
 const login = () => {
   signInWithEmailAndPassword(getAuth(), username.value, password.value)
-    .then((data) => {
+    .then(() => {
       console.log("Successfully Signed In")
       router.push('/')
     })
     .catch((error) => {
-      console.log(username.value, password.value)
+      console.log(error)
     })
-};
-
+}
 </script>
 
 <template>
-  <div class="center">
-    <h1>Login</h1>
-    <div class="fields">
-      <input type="text" placeholder="Email" name="userBox" v-model="username">
-      <input type="text" placeholder="Password" name="passBox" v-model="password">
+  <div class="login-overlay">
+    <div class="login-container">
+      <h1>Login</h1>
+      <div class="login-form">
+        <label for="email" :class="{ 'active': username }">Email</label>
+        <input type="text" id="email" v-model="username">
+        <label for="password" :class="{ 'active': password }">Password</label>
+        <input type="password" id="password" v-model="password">
+        <button class="login-button" @click="login">Login</button>
+      </div>
     </div>
-    <button class="login" @click="login">Login</button>
-    </div>
+  </div>
 </template>
 
-<style scoped>
 
-.center {
+<style scoped>
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+}
+
+.login-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width:400px;
-  background: #242424;
-  border: 2px solid lightgray;
-  border-radius: 10px;
-  color: #42b983;
-  padding: 10px
-}
-
-.center h1 {
-  text-align: center;
-  padding: 0 0 20px 0;
-  border-bottom: 1px solid lightgray;
-}
-
-.fields {
-  position: relative;
-  border-bottom: 1px solid lightgray;
-  margin: 30px 0px;
-}
-
-.fields input {
-  width: 90%;
-  padding: 0 5px;
-  height: 40px;
-  font-size: 16px;
-  border: none;
-  background: none;
-  border: 2px solid lightgray;
+  width: 400px;
+  background: #333;
   border-radius: 10px;
   color: white;
-  margin-bottom: 20px
+  padding: 40px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
-.center .login {
-  transform: translateY(-15px)
+.login-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #999;
+  transition: all 0.3s ease-in-out;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+label.active {
+  font-size: 12px;
+  top: 0;
+  transform: translateY(0%);
+}
+
+input {
+  padding: 20px 10px;
+  font-size: 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #fff;
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+input:focus + label {
+  font-size: 12px;
+  top: 0;
+  transform: translateY(0%);
+}
+
+input:focus + label + .bar {
+  width: 100%;
+}
+
+.bar {
+  position: absolute;
+  display: block;
+  width: 0%;
+  height: 2px;
+  background: #fff;
+  transition: all 0.3s ease-in-out;
+  bottom: 0;
+  left: 0;
+}
+
+.login-button {
+  padding: 10px 20px;
+  background: #fff;
+  border: none;
+  border-radius: 5px;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-button:hover {
+  background: #333;
+  color: #fff;
 }
 
 </style>

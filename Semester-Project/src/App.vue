@@ -6,12 +6,14 @@ import Navbar from './components/Navbar.vue';
 </script>
 
 <template>
-  <Navbar/>
+  <Navbar class="navbar"/>
   <div class="main">
     <router-view/>
   </div>
 </template>
 
 <style scoped>
-
+.navbar {
+  z-index: 10000;
+}
 </style>
