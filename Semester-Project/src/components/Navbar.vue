@@ -27,6 +27,7 @@ window.addEventListener('scroll', function() {
             <li><router-link to="/about" class="link">About</router-link></li>
             <li><router-link to="/" class="link">Contact</router-link></li>
             <li><router-link to="/login" class="link" >Login</router-link></li>
+            <li><router-link to="/signup" class="link" >Sign Up</router-link></li>
         </ul>
     </nav>
   </header>

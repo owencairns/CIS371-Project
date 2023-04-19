@@ -8,6 +8,8 @@ const router = useRouter()
 const username = ref('')
 const password = ref('')
 
+const errMsg = ref() //ERROR MESSAGE
+
 const login = () => {
   signInWithEmailAndPassword(getAuth(), username.value, password.value)
     .then(() => {
@@ -16,6 +18,20 @@ const login = () => {
     })
     .catch((error) => {
       console.log(error)
+      switch (error.code) {
+        case "auth/invalid-email":
+          errMsg.value = "Invalid email";
+          break;
+        case "auth/user-not-found":
+          errMsg.value = "No account with that email was found";
+          break;
+        case "auth/wrong-passwword":
+          errMsg.value = "Incorrect password";
+          break;
+        default:
+          errMsg.value = "Email or password was incorrect";
+          break;
+      }
     })
 }
 </script>
@@ -30,6 +46,7 @@ const login = () => {
         <label for="password" :class="{ 'active': password }">Password</label>
         <input type="password" id="password" v-model="password">
         <button class="login-button" @click="login">Login</button>
+        <p v-if="errMsg">{{ errMsg }}</p>
       </div>
     </div>
   </div>
