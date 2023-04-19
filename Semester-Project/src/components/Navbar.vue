@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, Ref } from 'vue';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { routerKey, useRouter } from 'vue-router';
+
+const router = useRouter();
 
 let mobile = false
 let scroll = ref(false)
@@ -12,6 +16,29 @@ window.addEventListener('scroll', function() {
         scroll.value = false
     }
 })
+
+// Stuff used to find out if a user is logged in or not
+const isLoggedIn = ref(false);
+
+let auth;
+onMounted(() => {
+    auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            isLoggedIn.value = true;
+        }
+        else {
+            isLoggedIn.value = false;
+        }
+    });
+});
+
+// Signs the user out then returns them to the home page
+const handleSignOut = () => {
+    signOut(auth).then(() => {
+        router.push("/");
+    });
+};
 
 </script>
 
@@ -26,8 +53,10 @@ window.addEventListener('scroll', function() {
             <li><router-link to="/" class="link">Portfolio</router-link></li>
             <li><router-link to="/about" class="link">About</router-link></li>
             <li><router-link to="/" class="link">Contact</router-link></li>
-            <li><router-link to="/login" class="link" >Login</router-link></li>
-            <li><router-link to="/signup" class="link" >Sign Up</router-link></li>
+            <li><router-link to="/login" class="link" v-if="!isLoggedIn">Login</router-link></li>
+            <li><router-link to="/signup" class="link" v-if="!isLoggedIn">Sign Up</router-link></li>
+            <li><router-link to="/profile" class="link" v-if="isLoggedIn">Profile</router-link></li>
+            <li><button @click="handleSignOut" class="button" v-if="isLoggedIn">Sign out</button></li>
         </ul>
     </nav>
   </header>
@@ -116,6 +145,24 @@ li {
     align-items: center;
     flex: 1;
     justify-content: flex-end;
+}
+
+.button {
+    font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  color: #ffe600;
+  font-size: 14px;
+  border: 2px solid #fff;
+  border-radius: 50px;
+  transition: 0.5s ease all;
+  
+}
+
+.button:hover {
+  background-color: #fff;
+  color: #000000;
+  transition: 0.3s ease-in-out;
 }
 
 </style>
