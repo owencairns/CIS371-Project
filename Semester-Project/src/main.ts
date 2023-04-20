@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import { createRouter, createWebHashHistory } from 'vue-router';
 import "./style.css";
 
+
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
 /* import font awesome icon component */

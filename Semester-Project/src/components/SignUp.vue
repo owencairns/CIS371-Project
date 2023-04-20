@@ -2,15 +2,25 @@
 import { ref, Ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword, UserCredential } from 'firebase/auth'
 import { useRouter } from 'vue-router';
+import { debug } from 'console';
+import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
 const router = useRouter()
+
+const db = getFirestore();
 
 const username = ref('')
 const password = ref('')
 
+const firstName = ref('')
+const lastName = ref('')
+
 const signUp = () => {
   createUserWithEmailAndPassword(getAuth(), username.value, password.value)
     .then((data) => {
+      // Create a document in the 'Users' collection with the same key as the user created in firebase auth
+      const newUserRef = doc(db, "users", data.user.uid);
+      setDoc(newUserRef, {email: username.value, fName: firstName.value, lName: lastName.value, phonNum: '' }); 
       console.log("Successfully Registered")
       router.push('/')
     })
@@ -27,6 +37,8 @@ const signUp = () => {
     <div class="fields">
       <input type="text" placeholder="Email" name="userBox" v-model="username">
       <input type="text" placeholder="Password" name="passBox" v-model="password">
+      <input type="text" placeholder="First Name" name="userBox" v-model="firstName">
+      <input type="text" placeholder="Last Name" name="passBox" v-model="lastName">
     </div>
     <button class="login" @click="signUp">Sign Up</button>
   </div>

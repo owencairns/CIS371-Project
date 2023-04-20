@@ -56,7 +56,7 @@ const handleSignOut = () => {
             <li><router-link to="/login" class="link" v-if="!isLoggedIn">Login</router-link></li>
             <li><router-link to="/signup" class="link" v-if="!isLoggedIn">Sign Up</router-link></li>
             <li><router-link to="/profile" class="link" v-if="isLoggedIn">Profile</router-link></li>
-            <li><button @click="handleSignOut" class="button" v-if="isLoggedIn">Sign out</button></li>
+            <li><button @click="handleSignOut" class="button" v-if="isLoggedIn">Sign Out</button></li>
         </ul>
     </nav>
   </header>
