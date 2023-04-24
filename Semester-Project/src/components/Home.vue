@@ -14,26 +14,6 @@ import { ref, Ref } from 'vue';
       <router-link to="/" class="book">Explore!</router-link>
     </div>
   </div>
-  <div class="favorites">
-    <h3>Some of Our Work</h3>
-    <div class="vid1"></div>
-    <div class="vid2"></div>
-    <div class="vid3"></div>
-    <div class="vid4"></div>
-    <div class="vid5"></div>
-    <div class="vid6"></div>
-  </div>
-  <section class="video-section">
-    <h1>Trending Now</h1>
-    <div class="video-grid">
-      <div class="video-placeholder"></div>
-      <div class="video-placeholder"></div>
-      <div class="video-placeholder"></div>
-      <div class="video-placeholder"></div>
-      <div class="video-placeholder"></div>
-      <div class="video-placeholder"></div>
-    </div>
-  </section>
 </template>
 
 <style scoped>
@@ -99,26 +79,6 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.video-section {
-  color: #000000;
-  margin: 0 auto;
-  padding-left: 5%;
-  padding-right: 5%;
-  padding-bottom: 100px;
-}
-
-.video-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  grid-gap: 30px;
-}
-
-.video-placeholder {
-  height: 270px;
-  background-color: gray;
-  border-radius: 5px;
 }
 
 </style>
