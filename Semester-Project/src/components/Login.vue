@@ -37,122 +37,86 @@ const login = () => {
 </script>
 
 <template>
-  <div class="login-overlay">
-    <div class="login-container">
+  <div class="login-container">
+    <div class="login-card">
       <h1>Login</h1>
       <div class="login-form">
-        <label for="email" :class="{ 'active': username }">Email</label>
-        <input type="text" id="email" v-model="username">
-        <label for="password" :class="{ 'active': password }">Password</label>
-        <input type="password" id="password" v-model="password">
+        <div class="login-input">
+          <input type="text" placeholder="Email" v-model="username">
+        </div>
+        <div class="login-input">
+          <input type="password" placeholder="Password" v-model="password">
+        </div>
         <button class="login-button" @click="login">Login</button>
         <p v-if="errMsg">{{ errMsg }}</p>
+        <p class="login-text">Don't have an account? <router-link to="/signup">Sign up</router-link></p>
       </div>
     </div>
   </div>
 </template>
 
-
 <style scoped>
-.login-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
-}
-
 .login-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  background: #333;
-  border-radius: 10px;
-  color: white;
-  padding: 40px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f3f3f3;
+  color: black;
 }
 
-.login-container h1 {
+.login-card {
+  width: 400px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding-left: 50px;
+  padding-right: 75px;
   text-align: center;
+}
+
+.login-card h1 {
+  font-size: 2rem;
+  font-weight: bold;
   margin-bottom: 30px;
 }
 
 .login-form {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #999;
-  transition: all 0.3s ease-in-out;
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-label.active {
-  font-size: 12px;
-  top: 0;
-  transform: translateY(0%);
-}
-
-input {
-  padding: 20px 10px;
-  font-size: 16px;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid #fff;
   margin-bottom: 30px;
-  color: #fff;
 }
 
-input:focus + label {
-  font-size: 12px;
-  top: 0;
-  transform: translateY(0%);
+.login-input {
+  margin-bottom: 20px;
 }
 
-input:focus + label + .bar {
+.login-input input {
   width: 100%;
-}
-
-.bar {
-  position: absolute;
-  display: block;
-  width: 0%;
-  height: 2px;
-  background: #fff;
-  transition: all 0.3s ease-in-out;
-  bottom: 0;
-  left: 0;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #d3d3d3;
+  font-size: 1rem;
+  color: #333333;
 }
 
 .login-button {
-  padding: 10px 20px;
-  background: #fff;
-  border: none;
+  display: block;
+  margin: 0 auto;
+  padding: 12px 30px;
   border-radius: 5px;
-  color: #333;
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 30px;
+  border: none;
+  background-color: #FFB800;
+  color: #ffffff;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
 
 .login-button:hover {
-  background: #333;
-  color: #fff;
+  background-color: #FFB800;
+}
+
+.login-text {
+  font-size: 1rem;
+  color: #666666;
 }
 
 </style>

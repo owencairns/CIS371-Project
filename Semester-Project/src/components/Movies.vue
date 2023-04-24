@@ -92,7 +92,7 @@ onMounted(async () => {
   height: 100px;
 }
 .search-input-container {
-  margin-top: 20px;
+  padding-top: 10px;
   width: 20%;
   display: flex;
   align-items: center;

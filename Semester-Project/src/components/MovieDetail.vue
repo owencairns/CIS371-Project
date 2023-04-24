@@ -1,45 +1,60 @@
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
-import { getFirestore, doc, getDoc, DocumentSnapshot } from 'firebase/firestore'
+import { ref } from 'vue';
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { useRoute } from 'vue-router';
+import { getAuth } from 'firebase/auth';
 
 const route = useRoute();
+const auth = getAuth();
 
-const movieTitle = ref('Test Movie');
-const movieDirector = ref('Test Director');
-const movieImg = ref('/tmU7GeKVybMWFButWEGl2M4GeiP.jpg');
-const overview = ref('This is an overview example for a test movie that is not real');
-const rating = ref('9.9');
+type Review = {
+  id: number;
+  username: string;
+  review: string;
+}
+
+const movieTitle = ref('');
+const movieImg = ref('');
+const overview = ref('');
+const rating = ref('');
+const reviews = ref<Review[]>([]);
 
 const db = getFirestore();
 
-// const movieDoc = doc(db, "movies", <string> route.params.id);
-//     getDoc(movieDoc).then(
-//             (qd:DocumentSnapshot) => {
-//                 movieTitle.value = ref(qd.get("title"));
-//                 movieImg.value = ref(qd.get("poster_path"));
-//                 overview.value = ref(qd.get("overview"));
-//                 rating.value = ref(qd.get("vote_average"));
-//             }
-//         )
-
-const reviews = ref([
-  {
-    id: 1,
-    username: 'user1',
-    review: 'This movie was amazing!'
-  },
-  {
-    id: 2,
-    username: 'user2',
-    review: 'One of the best movies I\'ve ever seen!'
-  },
-  {
-    id: 3,
-    username: 'user3',
-    review: 'I didn\'t really like this movie, but it had some good moments.'
+const movieDoc = doc(db, "movies", <string>route.params.id);
+getDoc(movieDoc).then((qd) => {
+  movieTitle.value = qd.get("title");
+  movieImg.value = qd.get("poster_path");
+  overview.value = qd.get("overview");
+  rating.value = qd.get("vote_average");
+  if (qd.get("reviews")) {
+    reviews.value = qd.get("reviews");
   }
-]);
+});
+
+const user = auth.currentUser;
+
+const newReview = ref<Review>({
+  id: 0,
+  username: '',
+  review: ''
+});
+
+const submitReview = async () => {
+  if (user) {
+    const docRef = doc(db, "movies", <string> route.params.id);
+    const newReviewDoc = {
+      id: reviews.value.length + 1,
+      username: `${user.email}`,
+      review: newReview.value.review
+    };
+    await updateDoc(docRef, {
+      reviews: [...reviews.value, newReviewDoc]
+    });
+    reviews.value.push(newReviewDoc);
+    newReview.value.review = '';
+  }
+};
 
 </script>
 
@@ -54,7 +69,6 @@ const reviews = ref([
           <h1 class="movie-title">{{ movieTitle }}</h1>
           <hr class="divider">
           <div class="movie-description">
-            <h3 class="director">Director: {{ movieDirector }}</h3>
             <p>{{ overview }}</p>
             <h3>Average Rating: {{ rating }}/10</h3>
           </div>
@@ -66,6 +80,18 @@ const reviews = ref([
           <h3>{{ review.username }}</h3>
           <p>{{ review.review }}</p>
           <hr>
+        </div>
+        <div v-if="user" class="add-review">
+          <h2>Add a Review</h2>
+          <form @submit.prevent="submitReview">
+            <div class="form-group">
+              <label for="review-text">Review</label>
+              <textarea class="form-control" id="review-text" v-model="newReview.review" required></textarea>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Post Review</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -164,4 +190,47 @@ hr {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+.add-review {
+  margin-top: 20px;
+}
+
+.add-review h2 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: none;
+  font-size: 18px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #FFB800;
+  color: #fff;
+  border-radius: 5px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ffc72c;
+}
+
 </style>

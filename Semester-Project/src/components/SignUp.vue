@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
+import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword, UserCredential } from 'firebase/auth'
 import { useRouter } from 'vue-router';
-import { debug } from 'console';
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
 const router = useRouter()
@@ -11,11 +10,12 @@ const db = getFirestore();
 
 const username = ref('')
 const password = ref('')
-
 const firstName = ref('')
 const lastName = ref('')
+const errorMessage = ref('')
 
 const signUp = () => {
+  errorMessage.value = ''
   createUserWithEmailAndPassword(getAuth(), username.value, password.value)
     .then((data) => {
       // Create a document in the 'Users' collection with the same key as the user created in firebase auth
@@ -25,68 +25,96 @@ const signUp = () => {
       router.push('/')
     })
     .catch((error) => {
-      console.error(error.code)
+      errorMessage.value = error.message
     })
 };
-
 </script>
 
 <template>
-  <div class="center">
-    <h1>Sign Up</h1>
-    <div class="fields">
-      <input type="text" placeholder="Email" name="userBox" v-model="username">
-      <input type="text" placeholder="Password" name="passBox" v-model="password">
-      <input type="text" placeholder="First Name" name="userBox" v-model="firstName">
-      <input type="text" placeholder="Last Name" name="passBox" v-model="lastName">
+  <div class="signup-container">
+    <div class="signup-card">
+      <h1>Sign Up</h1>
+      <div class="signup-form">
+        <div class="signup-input">
+          <input type="text" placeholder="Email" v-model="username">
+        </div>
+        <div class="signup-input">
+          <input type="password" placeholder="Password" v-model="password">
+        </div>
+        <div class="signup-input">
+          <input type="text" placeholder="First Name" v-model="firstName">
+        </div>
+        <div class="signup-input">
+          <input type="text" placeholder="Last Name" v-model="lastName">
+        </div>
+        <button class="signup-button" @click="signUp">Sign Up</button>
+      </div>
+      <p class="signup-text">Already have an account? <router-link to="/login">Log in</router-link></p>
     </div>
-    <button class="login" @click="signUp">Sign Up</button>
   </div>
 </template>
 
 <style scoped>
-
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width:400px;
-  background: #242424;
-  border: 2px solid lightgray;
-  border-radius: 10px;
-  color: #42b983;
-  padding: 10px
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f3f3f3;
+  color: black;
 }
 
-.center h1 {
+.signup-card {
+  width: 400px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding-left: 50px;
+  padding-right: 75px;
   text-align: center;
-  padding: 0 0 20px 0;
-  border-bottom: 1px solid lightgray;
 }
 
-.fields {
-  position: relative;
-  border-bottom: 1px solid lightgray;
-  margin: 30px 0px;
+.signup-card h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 30px;
 }
 
-.fields input {
-  width: 90%;
-  padding: 0 5px;
-  height: 40px;
-  font-size: 16px;
+.signup-form {
+  margin-bottom: 30px;
+}
+
+.signup-input {
+  margin-bottom: 20px;
+}
+
+.signup-input input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #d3d3d3;
+  font-size: 1rem;
+  color: #333333;
+}
+
+.signup-button {
+  display: block;
+  margin: 0 auto;
+  padding: 12px 30px;
+  border-radius: 5px;
   border: none;
-  background: none;
-  border: 2px solid lightgray;
-  border-radius: 10px;
-  color: white;
-  margin-bottom: 20px
+  background-color: #FFB800;
+  color: #ffffff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
-.center .login {
-  transform: translateY(-15px)
+.signup-button:hover {
+  background-color: #FFB800;
 }
 
-
+.signup-text {
+  font-size: 1rem;
+  color: #666666;
+}
 </style>
