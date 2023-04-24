@@ -50,7 +50,7 @@ const handleSignOut = () => {
         </div>
         <ul v-show="!mobile" class="navigation">
             <li><router-link to="/" class="link">Home</router-link></li>
-            <li><router-link to="/" class="link">Portfolio</router-link></li>
+            <li><router-link to="/movies" class="link">Movies</router-link></li>
             <li><router-link to="/about" class="link">About</router-link></li>
             <li><router-link to="/" class="link">Contact</router-link></li>
             <li><router-link to="/login" class="link" v-if="!isLoggedIn">Login</router-link></li>

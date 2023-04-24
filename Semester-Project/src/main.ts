@@ -18,6 +18,8 @@ import Login from './components/Login.vue'
 import SignUp from './components/SignUp.vue'
 import About from './components/About.vue'
 import Profile from './components/Profile.vue'
+import Movies from './components/Movies.vue'
+import MovieDetail from './components/MovieDetail.vue'
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -43,6 +45,8 @@ const myComponentRoutes = [
     { path: '/signup', component: SignUp },
     { path: '/about', component: About },
     { path: '/profile', component: Profile },
+    { path: '/movies', component: Movies },
+    { path: '/movie/:id', component: MovieDetail },
    ];
 const router = createRouter({ routes: myComponentRoutes, history: createWebHashHistory() });
 
