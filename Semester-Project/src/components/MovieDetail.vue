@@ -287,6 +287,7 @@ button {
   border: none;
   font-size: 18px;
   cursor: pointer;
+  padding-right: 5px;
 }
 
 button:hover {
