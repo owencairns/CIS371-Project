@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue';
+import { ref } from 'vue';
 import { getFirestore, doc, getDoc, DocumentSnapshot, collection, query, orderBy, limit, getDocs } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { Chart, ChartConfiguration } from 'chart.js/auto';
+import { useRoute } from 'vue-router';
 
 type Review = {
   id: number;
@@ -20,11 +21,14 @@ const firstName = ref('')
 const lastName = ref('')
 const reviews = ref<Review[]>([]);
 const users = ref<User[]>([]);
+const isActive = ref(false)
 
 const db = getFirestore();
 const auth = getAuth();
+const route = useRoute();
+
 onAuthStateChanged(auth, (user) => {
-  if (user) {
+  if (user && route.path === '/profile') {
     const userDoc = doc(db, "users", user.uid);
     getDoc(userDoc).then((qd: DocumentSnapshot) => {
       email.value = qd.get("email");
@@ -47,7 +51,6 @@ onAuthStateChanged(auth, (user) => {
 
 function createChart() {
   const chartElement = document.getElementById('myChart') as HTMLCanvasElement;
-
   const chartConfig: ChartConfiguration<'bar', number[], string> = {
     type: 'bar',
     data: {
@@ -94,7 +97,7 @@ function createChart() {
         },
       },
     },
-    
+
   };
   new Chart(chartElement, chartConfig);
 }
@@ -276,5 +279,4 @@ button:hover {
 #myChart {
   margin-top: 20px;
 }
-
 </style>
