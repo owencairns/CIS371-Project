@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { getFirestore, doc, getDoc, updateDoc, increment } from 'firebase/firestore'
 import { useRoute } from 'vue-router';
 import { getAuth } from 'firebase/auth';
@@ -20,6 +20,8 @@ const rating = ref('');
 const reviews = ref<Review[]>([]);
 const userReviews = ref<Review[]>([]);
 const totalReviews = ref();
+const editing = ref(false);
+const editReviewId = ref<number | null>(null);
 
 const db = getFirestore();
 
@@ -44,7 +46,7 @@ const newReview = ref<Review>({
 
 const submitReview = async () => {
   if (user) {
-    const docRef = doc(db, "movies", <string> route.params.id);
+    const docRef = doc(db, "movies", <string>route.params.id);
     const newReviewDoc = {
       id: reviews.value.length + 1,
       username: `${user.email}`,
@@ -56,7 +58,7 @@ const submitReview = async () => {
       totalReviews.value = qd.get("totalReviews");
       if (qd.get("reviews")) {
         userReviews.value = qd.get("reviews");
-  }
+      }
     });
 
     const userReviewDoc = {
@@ -75,6 +77,27 @@ const submitReview = async () => {
     newReview.value.review = '';
   }
 };
+
+const deleteReview = async (id: number) => {
+  const docRef = doc(db, "movies", <string>route.params.id);
+  const updatedReviews = reviews.value.filter(review => review.id !== id);
+  await updateDoc(docRef, {
+    reviews: updatedReviews
+  });
+  reviews.value = updatedReviews;
+};
+
+const editReview = async (id: number, newReviewText: string) => {
+  editing.value = true;
+  editReviewId.value = id;
+  newReview.value.review = newReviewText;
+};
+
+watch(editing, (newVal) => {
+  if (newVal === false) {
+    newReview.value.review = '';
+  }
+});
 
 </script>
 
@@ -98,7 +121,24 @@ const submitReview = async () => {
         <h2>Reviews</h2>
         <div v-for="review in reviews" :key="review.id" class="review">
           <h3>{{ review.username }}</h3>
-          <p>{{ review.review }}</p>
+          <div v-if="!editing || (editing && editReviewId !== review.id)">
+            <p>{{ review.review }}</p>
+            <div v-if="user && user.email === review.username">
+              <button @click="deleteReview(review.id)" class="btn btn-danger">Delete</button>
+              <button @click="editReview(review.id, review.review)" class="btn btn-primary">Edit</button>
+            </div>
+          </div>
+          <div v-if="editing && editReviewId === review.id">
+            <form @submit.prevent="submitReview">
+              <div class="form-group">
+                <label for="review-text">Review</label>
+                <textarea class="form-control" id="review-text" v-model="newReview.review" required></textarea>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">{{ editReviewId ? 'Update' : 'Post' }} Review</button>
+              </div>
+            </form>
+          </div>
           <hr>
         </div>
         <div v-if="user" class="add-review">
@@ -109,7 +149,7 @@ const submitReview = async () => {
               <textarea class="form-control" id="review-text" v-model="newReview.review" required></textarea>
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-primary">Post Review</button>
+              <button type="submit" class="btn btn-primary">{{ editReviewId ? 'Update' : 'Post' }} Review</button>
             </div>
           </form>
         </div>
