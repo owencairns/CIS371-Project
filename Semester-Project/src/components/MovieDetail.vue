@@ -44,7 +44,7 @@ const newReview = ref<Review>({
 
 const submitReview = async () => {
   if (user) {
-    const docRef = doc(db, "movies", <string>route.params.id);
+    const docRef = doc(db, "movies", <string> route.params.id);
     const newReviewDoc = {
       id: reviews.value.length + 1,
       username: `${user.email}`,
@@ -56,7 +56,7 @@ const submitReview = async () => {
       totalReviews.value = qd.get("totalReviews");
       if (qd.get("reviews")) {
         userReviews.value = qd.get("reviews");
-      }
+  }
     });
 
     const userReviewDoc = {
@@ -252,4 +252,5 @@ button {
 button:hover {
   background-color: #ffc72c;
 }
+
 </style>
