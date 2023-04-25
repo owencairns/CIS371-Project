@@ -11,7 +11,7 @@ import { ref, Ref } from 'vue';
       <source src="../assets/film_projector.mp4" type="video/webm"/>
     </video>
     <div class="content">
-      <router-link to="/" class="book">Explore!</router-link>
+      <router-link to="/movies" class="book">Explore!</router-link>
     </div>
   </div>
 </template>

@@ -18,6 +18,7 @@ const movieImg = ref('');
 const overview = ref('');
 const rating = ref('');
 const reviews = ref<Review[]>([]);
+const userReviews = ref<Review[]>([]);
 const totalReviews = ref();
 
 const db = getFirestore();
@@ -51,8 +52,11 @@ const submitReview = async () => {
     };
 
     const userdocRef = doc(db, "users", user.uid)
-    getDoc(movieDoc).then((qd) => {
+    getDoc(userdocRef).then((qd) => {
       totalReviews.value = qd.get("totalReviews");
+      if (qd.get("reviews")) {
+        userReviews.value = qd.get("reviews");
+  }
     });
 
     const userReviewDoc = {
@@ -64,7 +68,7 @@ const submitReview = async () => {
       reviews: [...reviews.value, newReviewDoc]
     });
     await updateDoc(userdocRef, {
-      reviews: [...reviews.value, userReviewDoc],
+      reviews: [...userReviews.value, userReviewDoc],
       totalReviews: increment(1)
     });
     reviews.value.push(newReviewDoc);
