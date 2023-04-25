@@ -1,45 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref, onMounted} from 'vue';
-import { getFirestore, orderBy, limit, doc, getDoc, DocumentSnapshot, query, where, collection, getDocs, QuerySnapshot, QueryDocumentSnapshot } from 'firebase/firestore'
-import { Chart } from 'chart.js/auto'
-
-const db = getFirestore();
-const moviesRef = collection(db, "movies");
-
-const movieNames = ref<string[]>([]);
-const movieVotes = ref<number[]>([]);
-
-const top5 = query(
-  moviesRef,
-  orderBy("vote_average", "desc"), 
-  limit(5)
-);
-
-
-getDocs(top5).then((qs: QuerySnapshot) => {
-  qs.forEach((qd: QueryDocumentSnapshot) => {
-    const movie = qd.data();
-    movieNames.value.push(movie.title);
-    movieVotes.value.push(movie.vote_average);
-  })
-})
-
-const data = {
-    labels: movieNames.value,
-    datasets: [{
-      label: 'Top 5 Movies',
-      data: movieVotes.value
-    }]
-  }
-
-  const ctx = document.getElementById("movieChart") as HTMLCanvasElement;
-
-  const myChart = new Chart(ctx, {
-    type: 'bar',
-    data: data
-  });
-  
-myChart;
+import { ref, Ref} from 'vue';
 </script>
 
 <template>
@@ -53,10 +13,6 @@ myChart;
       <router-link to="/movies" class="book">Explore!</router-link>
     </div>
   </div>
-  <canvas id="movieChart" width="400" height="400"></canvas>
-
-  <div style="width: 800px;"><canvas id="acquisitions"></canvas></div>
-
 </template>
 
 <style scoped>
