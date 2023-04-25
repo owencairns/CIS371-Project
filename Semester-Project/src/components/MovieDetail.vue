@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, updateDoc, increment } from 'firebase/firestore'
 import { useRoute } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 
@@ -18,6 +18,7 @@ const movieImg = ref('');
 const overview = ref('');
 const rating = ref('');
 const reviews = ref<Review[]>([]);
+const totalReviews = ref();
 
 const db = getFirestore();
 
@@ -48,8 +49,23 @@ const submitReview = async () => {
       username: `${user.email}`,
       review: newReview.value.review
     };
+
+    const userdocRef = doc(db, "users", user.uid)
+    getDoc(movieDoc).then((qd) => {
+      totalReviews.value = qd.get("totalReviews");
+    });
+
+    const userReviewDoc = {
+      id: totalReviews.value + 1,
+      username: movieTitle.value,
+      review: newReview.value.review
+    };
     await updateDoc(docRef, {
       reviews: [...reviews.value, newReviewDoc]
+    });
+    await updateDoc(userdocRef, {
+      reviews: [...reviews.value, userReviewDoc],
+      totalReviews: increment(1)
     });
     reviews.value.push(newReviewDoc);
     newReview.value.review = '';
