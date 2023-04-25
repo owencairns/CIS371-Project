@@ -21,9 +21,9 @@ onAuthStateChanged(auth, (user) => {
         const userDoc = doc(db, "users", user.uid);
         getDoc(userDoc).then(
             (qd:DocumentSnapshot) => {
-                email.value = ref(qd.get("email"));
-                firstName.value = ref(qd.get("fName"));
-                lastName.value = ref(qd.get("lName"));
+                email.value = qd.get("email");
+                firstName.value = qd.get("fName");
+                lastName.value = qd.get("lName");
                 if (qd.get("reviews")) {
                     reviews.value = qd.get("reviews");
                 }

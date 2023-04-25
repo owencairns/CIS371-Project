@@ -43,7 +43,7 @@ onMounted(async () => {
   const snapshot = await query(
     moviesRef,
     orderBy("id"),
-    limit(10)
+    limit(20)
   );
   const docs = await getDocs(snapshot);
   const movies = sampleSize(docs.docs.map(doc => doc.data()), 100);
